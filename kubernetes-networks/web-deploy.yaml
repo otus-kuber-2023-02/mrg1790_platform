@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+ name: web # Название нашего объекта Deployment
+spec:
+ replicas: 3 # Начнем с одного пода
+ selector: # Укажем, какие поды относятся к нашему Deployment:
+  matchLabels: # - это поды с меткой
+   app: web # app и ее значением web
+ strategy:
+  type: RollingUpdate
+  rollingUpdate:
+   maxUnavailable: 0%
+   maxSurge: 100%
+ template: # Теперь зададим шаблон конфигурации пода
+  metadata:
+   name: web # Название Pod
+   labels: 
+    app: web  # Метки в формате key: value
+  spec: # Описание Pod
+   containers:   # Описание контейнеров внутри Pod
+   - name: web # Название контейнера
+     image: mrg1790/howework # Образ из которого создается контейнер
+     # --- BEGIN --thats/me
+     readinessProbe: # Добавим проверку готовности
+      httpGet: # веб-сервера отдавать
+       path: homework.html # контент
+       port: 8000
+     livenessProbe:
+       tcpSocket: { port: 8000 }
+     # --- END ---
+   initContainers:
+   - name: wget
+     image: busybox:1.31.0
+     command: ['sh', '-c', 'wget -O- https://tinyurl.com/otus-k8s-intro | sh']
+     volumeMounts:
+     - name: app
+       mountPath: /app
+   volumes:
+   - name: app
+     emptyDir: {}

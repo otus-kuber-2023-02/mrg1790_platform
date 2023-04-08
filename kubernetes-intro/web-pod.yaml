@@ -6,8 +6,16 @@ metadata:
   app: web  # Метки в формате key: value
 spec: # Описание Pod
  containers:   # Описание контейнеров внутри Pod
- - name:  hw-nginx # Название контейнера
+ - name: web # Название контейнера
    image: mrg1790/howework-nginx # Образ из которого создается контейнер
+   # --- BEGIN --thats/me
+   readinessProbe: # Добавим проверку готовности
+    httpGet: # веб-сервера отдавать
+     path: /index.html # контент
+     port: 80
+   livenessProbe:
+     tcpSocket: { port: 8000 }
+   # --- END ---
  initContainers:
  - name: wget
    image: busybox:1.31.0
