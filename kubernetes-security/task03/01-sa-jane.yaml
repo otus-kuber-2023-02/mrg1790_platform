@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  creationTimestamp: "2023-04-08T15:27:07Z"
+  name: jane
+  namespace: dev
+  resourceVersion: "104276"
+  uid: f008a1ac-6bb1-454a-9ede-225120d54b81

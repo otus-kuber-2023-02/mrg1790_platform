@@ -1,0 +1,15 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  creationTimestamp: "2023-04-08T15:30:31Z"
+  name: admin
+  namespace: dev
+  resourceVersion: "104442"
+  uid: f991c653-4c44-4c84-ade8-75d9bd071d59
+rules:
+- apiGroups:
+  - ""
+  resources:
+  - '*'
+  verbs:
+  - '*'
