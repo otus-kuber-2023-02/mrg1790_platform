@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  creationTimestamp: "2023-04-08T15:08:05Z"
+  name: carol
+  namespace: default
+  resourceVersion: "103347"
+  uid: 54269a1e-79e0-4804-a704-7fea222cfeee

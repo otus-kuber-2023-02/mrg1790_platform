@@ -1,0 +1,13 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: rb4noone
+  namespace: ns4noone
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role  
+  name: noone
+subjects:
+- kind: ServiceAccount
+  name: dave
+  namespace: ns4noone

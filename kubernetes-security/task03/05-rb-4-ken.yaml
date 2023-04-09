@@ -1,0 +1,16 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  creationTimestamp: "2023-04-08T15:38:14Z"
+  name: rb-view
+  namespace: dev
+  resourceVersion: "104877"
+  uid: 3746b3c1-5731-4697-976c-8b496b5ef006
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: view
+subjects:
+- kind: ServiceAccount
+  name: ken
+  namespace: dev

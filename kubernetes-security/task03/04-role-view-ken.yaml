@@ -1,0 +1,17 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  creationTimestamp: "2023-04-08T15:34:59Z"
+  name: view
+  namespace: dev
+  resourceVersion: "104662"
+  uid: f78b2669-52fc-4f96-89ee-f07fe3773549
+rules:
+- apiGroups:
+  - ""
+  resources:
+  - '*'
+  verbs:
+  - get
+  - list
+  - watch

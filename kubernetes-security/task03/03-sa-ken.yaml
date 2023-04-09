@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  creationTimestamp: "2023-04-08T15:31:57Z"
+  name: ken
+  namespace: dev
+  resourceVersion: "104513"
+  uid: e75ffda8-6879-4193-9e1e-ed106aa3e115
