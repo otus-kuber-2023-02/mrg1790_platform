@@ -1,0 +1,164 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: hello-world
+  labels:
+    prometheus: front-end-team
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: nginx-exporter-2
+  labels:
+    prometheus: front-end-team
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: nginx-exporter-3
+  labels:
+    prometheus: front-end-team
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: nginx-exporter-lb
+  name: hello
+  namespace: hello-world
+spec:
+  ports:
+  - name: nginx-1
+    port: 80
+    targetPort: 8000
+  - name: nginx-2
+    port: 82
+    targetPort: 8002
+  - name: nginx-3
+    port: 83
+    targetPort: 8003
+  - name: nginx-exporter
+    port: 9100
+    targetPort: 9113
+  selector:
+    app: hello
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: nginx-exporter-lb
+  name: nginx-exporter-2-lb
+  namespace: nginx-exporter-2
+spec:
+  ports:
+  - name: nginx-exporter-2
+    port: 9102
+    targetPort: 9113
+  selector:
+    app: nginx-2
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: nginx-exporter-lb
+  name: nginx-exporter-3-lb
+  namespace: nginx-exporter-3
+spec:
+  ports:
+  - name: nginx-exporter-3
+    port: 9103
+    targetPort: 9113
+  selector:
+    app: nginx-3
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hello-world-deployment
+  namespace: hello-world
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: hello
+  template:
+    metadata:
+      labels:
+        app: hello
+      namespace: hello-world
+    spec:
+      containers:
+      - image: cr.yandex/crpvgbhatq9sn45sion3/nginx:__VERSION__
+        imagePullPolicy: Always
+        name: hello-world
+        ports:
+        - containerPort: 8000
+      - image: cr.yandex/crpvgbhatq9sn45sion3/nginx-2:__VERSION__
+        imagePullPolicy: Always
+        name: nginx-2
+        ports:
+        - containerPort: 8002
+      - image: cr.yandex/crpvgbhatq9sn45sion3/nginx-3:__VERSION__
+        imagePullPolicy: Always
+        name: nginx-3
+        ports:
+        - containerPort: 8003
+      - args:
+        - -nginx.scrape-uri
+        - http://localhost:8000/basic_status
+        image: cr.yandex/crpvgbhatq9sn45sion3/nginx-exporter:__VERSION__
+        name: nginx-exporter
+        ports:
+        - containerPort: 9113
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-exporter-2
+  namespace: nginx-exporter-2
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nginx-2
+  template:
+    metadata:
+      labels:
+        app: nginx-2
+      namespace: nginx-exporter-2
+    spec:
+      containers:
+      - args:
+        - -nginx.scrape-uri
+        - http://hello.hello-world:82/basic_status
+        image: cr.yandex/crpvgbhatq9sn45sion3/nginx-exporter:__VERSION__
+        name: nginx-exporter-2
+        ports:
+        - containerPort: 9113
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-exporter-3
+  namespace: nginx-exporter-3
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nginx-3
+  template:
+    metadata:
+      labels:
+        app: nginx-3
+      namespace: nginx-exporter-3
+    spec:
+      containers:
+      - args:
+        - -nginx.scrape-uri
+        - http://hello.hello-world:83/basic_status
+        image: cr.yandex/crpvgbhatq9sn45sion3/nginx-exporter:__VERSION__
+        name: nginx-exporter-3
+        ports:
+        - containerPort: 9113

@@ -1,0 +1,13 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  namespace: nginx-exporter-3
+  name: an-app
+  labels:
+    team: frontend
+spec:
+  selector:
+    matchLabels:
+      app: nginx-exporter-lb
+  endpoints:
+  - port: nginx-exporter-3
